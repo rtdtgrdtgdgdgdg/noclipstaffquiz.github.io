@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>13-Question Quiz</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #f4f4f4; }
+    .question { margin-bottom: 20px; }
+    button { padding: 10px 20px; font-size: 16px; }
+    .submit-btn { margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Quiz Time</h1>
+  <form id="quizForm">
+    <div class="question">1. What is Epic's catchphrase?<br>
+      <label><input type="radio" name="q1" value="meep"> meep</label><br>
+      <label><input type="radio" name="q1" value="bazinka"> bazinka</label>
+    </div>
+
+    <div class="question">2. What emoji is § son?<br>
+      <label><input type="radio" name="q2" value="silly billy"> silly billy</label><br>
+      <label><input type="radio" name="q2" value="joe bonkers"> joe bonkers</label><br>
+      <label><input type="radio" name="q2" value="buckteeth"> buckteeth</label>
+    </div>
+
+    <div class="question">3. Is leader evil or good?<br>
+      <label><input type="radio" name="q3" value="evil"> evil</label><br>
+      <label><input type="radio" name="q3" value="good"> good</label>
+    </div>
+
+    <div class="question">4. Is it ad or gorg?<br>
+      <label><input type="radio" name="q4" value="ad"> ad</label><br>
+      <label><input type="radio" name="q4" value="gorg"> gorg</label>
+    </div>
+
+    <div class="question">5. What backrooms level is Entity 974?<br>
+      <label><input type="radio" name="q5" value="pool rooms"> pool rooms</label><br>
+      <label><input type="radio" name="q5" value="kittys house"> kittys house</label><br>
+      <label><input type="radio" name="q5" value="level fun"> level fun</label>
+    </div>
+
+    <div class="question">6. What does Kayoas like?<br>
+      <label><input type="radio" name="q6" value="meth"> meth</label><br>
+      <label><input type="radio" name="q6" value="math"> math</label>
+    </div>
+
+    <div class="question">7. Who watches over everyone?<br>
+      <label><input type="radio" name="q7" value="xato"> xato</label><br>
+      <label><input type="radio" name="q7" value="roxx"> roxx</label><br>
+      <label><input type="radio" name="q7" value="nollear"> nollear</label>
+    </div>
+
+    <div class="question">8. Who’s Choob’s monkey noodle?<br>
+      <label><input type="radio" name="q8" value="dog"> dog</label><br>
+      <label><input type="radio" name="q8" value="cat"> cat</label><br>
+      <label><input type="radio" name="q8" value="horse"> horse</label>
+    </div>
+
+    <div class="question">9. What cult is Nollear a part of?<br>
+      <label><input type="radio" name="q9" value="busy bee"> busy bee</label><br>
+      <label><input type="radio" name="q9" value="cat"> cat</label><br>
+      <label><input type="radio" name="q9" value="fein"> fein</label>
+    </div>
+
+    <div class="question">10. What color is ***wolf9?<br>
+      <label><input type="radio" name="q10" value="blue"> blue</label><br>
+      <label><input type="radio" name="q10" value="red"> red</label><br>
+      <label><input type="radio" name="q10" value="green"> green</label>
+    </div>
+
+    <div class="question">11. Who's Xato's favorite NHL team?<br>
+      <label><input type="radio" name="q11" value="rangers"> rangers</label><br>
+      <label><input type="radio" name="q11" value="penguins"> penguins</label><br>
+      <label><input type="radio" name="q11" value="jets"> jets</label>
+    </div>
+
+    <div class="question">12. woo***<br>
+      <label><input type="radio" name="q12" value="poo"> poo</label><br>
+      <label><input type="radio" name="q12" value="mat"> mat</label><br>
+      <label><input type="radio" name="q12" value="bat"> bat</label>
+    </div>
+
+    <div class="question">13. Who's just the chillest of all guys?<br>
+      <label><input type="radio" name="q13" value="§"> §</label><br>
+      <label><input type="radio" name="q13" value="kat"> kat</label><br>
+      <label><input type="radio" name="q13" value="leader"> leader</label>
+    </div>
+
+    <button class="submit-btn" type="submit">Submit</button>
+  </form>
+
+  <script>
+    const answers = {
+      q1: "meep",
+      q2: "buckteeth",
+      q3: "evil",
+      q4: "gorg",
+      q5: "kittys house",
+      q6: "meth",
+      q7: "roxx",
+      q8: "cat",
+      q9: "busy bee",
+      q10: "red",
+      q11: "penguins",
+      q12: "bat",
+      q13: "kat"
+    };
+
+    const webhookUrl = "https://discord.com/api/webhooks/1368602951374995477/-FxPP4iZtpRbuSGBOfy2aRRQu0ERtB6Kgk3MD5bz5UEFBqzi7jctA7ukIVgQd-d7SNeC";
+
+    document.getElementById("quizForm").addEventListener("submit", async function(event) {
+      event.preventDefault();
+
+      const form = new FormData(event.target);
+      let results = "";
+      let score = 0;
+
+      for (let i = 1; i <= 13; i++) {
+        const key = `q${i}`;
+        const userAnswer = form.get(key);
+        const correctAnswer = answers[key];
+        if (userAnswer === correctAnswer) {
+          results += `Q${i}: ✅ (${userAnswer})\n`;
+          score++;
+        } else {
+          results += `Q${i}: ❌ (You said "${userAnswer}", correct: "${correctAnswer}")\n`;
+        }
+      }
+
+      const payload = {
+        content: `📝 **New Quiz Submission**\n\n${results}\n**Score: ${score}/13**`
+      };
+
+      await fetch(webhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      alert("Quiz submitted!");
+      event.target.reset();
+    });
+  </script>
+</body>
+</html>
